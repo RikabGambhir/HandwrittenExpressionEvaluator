@@ -5,15 +5,17 @@ from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras import backend as K
 import cv2
+from keras.datasets import mnist
+
 import numpy as np
 import random
 
 import os
 import os.path
 import tensorflow as tf
-import clock
+# import clock
 
-start_time = clock.now()
+# start_time = clock.now()
 
 from tensorflow.python.client import device_lib
 print(device_lib.list_local_devices())
@@ -21,13 +23,16 @@ print(device_lib.list_local_devices())
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
-sess = tf.Session(config = config)
+sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
+keras.backend.set_session(sess)
+
 
 CLASSES = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'plus', 'minus', 'multiplication', 'division1']
 NUM_CLASSES = len(CLASSES)  #The number of classes
+# NUM_CLASSES = 10
 IMG_SIZE = 28
 BATCH_SIZE = 128	        # The number of images to process during a single pass
-EPOCHS = 500	            # The number of times to iterate through the entire training set
+EPOCHS = 250	            # The number of times to iterate through the entire training set
 IMG_ROWS, IMG_COLS = IMG_SIZE, IMG_SIZE                 # Input Image Dimensions
 DATA_UTILIZATION = 1        # Fraction of data which is utilized in training and testing
 TEST_RATIO = 1/6
@@ -80,6 +85,8 @@ def loadData(test_ratio = TEST_RATIO):
 
 # Load data
 (x_train, y_train), (x_test, y_test) = loadData(test_ratio = TEST_RATIO)
+# (x_train, y_train), (x_test, y_test) = mnist.load_data()
+
 
 x_test = x_test.reshape(x_test.shape[0],IMG_ROWS, IMG_COLS,1)     # Reshape x_test where 1 = number of colors
 x_train = x_train.reshape(x_train.shape[0],IMG_ROWS, IMG_COLS,1)  # Reshape x_test
@@ -109,14 +116,14 @@ model.add(Conv2D(32, kernel_size=(3, 3),
                  activation='relu',
                  input_shape=input_shape))
 model.add(Conv2D(32, (3, 3), activation='relu'))
-model.add(Dropout(0.25))
+model.add(Dropout(0.50))
 model.add(Conv2D(64, (3, 3), activation='relu'))
-model.add(Dropout(0.25))
+model.add(Dropout(0.50))
 
 model.add(Conv2D(32, (3, 3), activation='relu'))
-model.add(Dropout(0.25))
+model.add(Dropout(0.50))
 model.add(Conv2D(32, (3, 3), activation='relu'))
-model.add(Dropout(0.25))
+model.add(Dropout(0.50))
 
 
 model.add(Flatten())
