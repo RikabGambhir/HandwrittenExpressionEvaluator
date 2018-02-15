@@ -11,6 +11,9 @@ import random
 import os
 import os.path
 import tensorflow as tf
+import clock
+
+start_time = clock.now()
 
 from tensorflow.python.client import device_lib
 print(device_lib.list_local_devices())
@@ -18,14 +21,13 @@ print(device_lib.list_local_devices())
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
-sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
-keras.backend.set_session(sess)
+sess = tf.Session(config = config)
 
 CLASSES = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'plus', 'minus', 'multiplication', 'division1']
 NUM_CLASSES = len(CLASSES)  #The number of classes
 IMG_SIZE = 28
 BATCH_SIZE = 128	        # The number of images to process during a single pass
-EPOCHS = 10000	            # The number of times to iterate through the entire training set
+EPOCHS = 500	            # The number of times to iterate through the entire training set
 IMG_ROWS, IMG_COLS = IMG_SIZE, IMG_SIZE                 # Input Image Dimensions
 DATA_UTILIZATION = 1        # Fraction of data which is utilized in training and testing
 TEST_RATIO = 1/6
@@ -50,6 +52,8 @@ def loadData(test_ratio = TEST_RATIO):
     for i, CLASS in enumerate(CLASSES):
         images = load_images_from_folder(CLASS)       # Load images from folder
         print(CLASS +" loaded")
+
+
 
         data = np.concatenate((data,images), axis=0)    # Add features (images) to data variable
         print("concatenated")
@@ -97,7 +101,8 @@ print(x_test.shape[0], 'test samples')
 y_train = keras.utils.to_categorical(y_train,num_classes = None)
 y_test = keras.utils.to_categorical(y_test, num_classes = None)
 
-
+NODES = 64
+LAYERS = 2
 #Define network
 model = Sequential()
 model.add(Conv2D(32, kernel_size=(3, 3),
@@ -105,8 +110,18 @@ model.add(Conv2D(32, kernel_size=(3, 3),
                  input_shape=input_shape))
 model.add(Conv2D(32, (3, 3), activation='relu'))
 model.add(Dropout(0.25))
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(Dropout(0.25))
+
+model.add(Conv2D(32, (3, 3), activation='relu'))
+model.add(Dropout(0.25))
+model.add(Conv2D(32, (3, 3), activation='relu'))
+model.add(Dropout(0.25))
+
+
 model.add(Flatten())
-model.add(Dense(64, activation='relu'))
+for x in list(range(LAYERS)):
+    model.add(Dense(NODES, activation='relu'))
 model.add(Dropout(0.5))
 # model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dense(NUM_CLASSES, activation='softmax'))
@@ -116,7 +131,7 @@ model.compile(loss=keras.losses.categorical_crossentropy,
 
 scores = []
 from matplotlib import pyplot as plt
-n=200
+n=100
 
 # Options for Dynamic Plotting
 if dynamic_plotting:
@@ -129,7 +144,6 @@ val_losses = []
 val_accs = []
 losses = []
 accs = []
-
 def plot_metrics(val_accs=val_accs,val_losses=val_losses,accs=accs,losses=losses):
     epochs = list(range(0, len(val_accs)))
     plt.plot(epochs, val_accs, 'b', label='Validation Accuracy')
@@ -138,6 +152,7 @@ def plot_metrics(val_accs=val_accs,val_losses=val_losses,accs=accs,losses=losses
     plt.plot(epochs, losses, 'm', label='Training Loss')
     plt.xlabel('Epoch')
     plt.legend()
+    plt.title('Loss and Accuracy Plot\nepochs = {0}, nodes = {1}, layers = {2}'.format(n, NODES, LAYERS))
     if dynamic_plotting:
         plt.draw()
         plt.pause(0.001)
@@ -147,7 +162,7 @@ def plot_metrics(val_accs=val_accs,val_losses=val_losses,accs=accs,losses=losses
 history = model.fit(x_train, y_train,
           batch_size=BATCH_SIZE,
           epochs=EPOCHS,
-          verbose=1,
+          verbose=2,
           validation_data=(x_test, y_test))
 val_accs.append(history.history['val_acc'])
 print(len(val_accs))
@@ -155,23 +170,36 @@ val_losses.append(history.history['val_loss'])
 accs.append(history.history['acc'])
 losses.append(history.history['loss'])
 
-    #print('TEST SCORES')
-    #print('acc: ',history.history['acc'])
-    #print('Trial #',x)
-    #print('Test loss:', val_losses)
-    #print('Test accuracy:', val_accs)
+'''
+for x in range(0,n):
+    history = model.fit(x_train, y_train,
+              batch_size=BATCH_SIZE,
+              epochs=1,
+              verbose=2,
+              validation_data=(x_test, y_test))
+    val_accs.append(history.history['val_acc'])
+    print(len(val_accs))
+    val_losses.append(history.history['val_loss'])
+    accs.append(history.history['acc'])
+    losses.append(history.history['loss'])
+'''
 
     # Dynamic Plotting
-plot_metrics()
+    # plot_metrics()
 
 try:
     model.save('classification')
 except:
     print("Couldn't Save!")
-#print('Test loss:', score[0], min(losses))
-#print('Test accuracy:', score[1], max(scores))
-#input("Process Finished, Press [enter] to Close ")
-print()
+
+# Save data to file log
+final_val_accuracy = history.history['val_acc']
+final_train_accuracy = history.history['acc']
+final_val_loss = history.history['val_loss']
+final_train_loss = history.history['loss']
+training_time = clock.now() - start_time
+with open('Data_Log.txt','a') as Data_Log:
+    Data_Log.write('{0},{1},{2},{3},{4},{5},{6},{7}'.format(n, NODES, LAYERS, final_val_accuracy, final_val_loss, final_train_accuracy, final_train_loss, training_time))
 
 # Plot results at end when dynamic plotting is off
 if not dynamic_plotting:
