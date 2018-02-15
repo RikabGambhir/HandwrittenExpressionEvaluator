@@ -12,16 +12,20 @@ import os
 import os.path
 import tensorflow as tf
 
+from tensorflow.python.client import device_lib
+print(device_lib.list_local_devices())
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
-sess = tf.Session(config = config)
+sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
+keras.backend.set_session(sess)
 
 CLASSES = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'plus', 'minus', 'multiplication', 'division1']
 NUM_CLASSES = len(CLASSES)  #The number of classes
 IMG_SIZE = 28
 BATCH_SIZE = 128	        # The number of images to process during a single pass
-EPOCHS = 500	            # The number of times to iterate through the entire training set
+EPOCHS = 10000	            # The number of times to iterate through the entire training set
 IMG_ROWS, IMG_COLS = IMG_SIZE, IMG_SIZE                 # Input Image Dimensions
 DATA_UTILIZATION = 1        # Fraction of data which is utilized in training and testing
 TEST_RATIO = 1/6
@@ -125,6 +129,7 @@ val_losses = []
 val_accs = []
 losses = []
 accs = []
+
 def plot_metrics(val_accs=val_accs,val_losses=val_losses,accs=accs,losses=losses):
     epochs = list(range(0, len(val_accs)))
     plt.plot(epochs, val_accs, 'b', label='Validation Accuracy')
@@ -139,17 +144,16 @@ def plot_metrics(val_accs=val_accs,val_losses=val_losses,accs=accs,losses=losses
     else:
         plt.show()
 
-for x in range(0,n):
-    history = model.fit(x_train, y_train,
-              batch_size=BATCH_SIZE,
-              epochs=1,
-              verbose=2,
-              validation_data=(x_test, y_test))
-    val_accs.append(history.history['val_acc'])
-    print(len(val_accs))
-    val_losses.append(history.history['val_loss'])
-    accs.append(history.history['acc'])
-    losses.append(history.history['loss'])
+history = model.fit(x_train, y_train,
+          batch_size=BATCH_SIZE,
+          epochs=EPOCHS,
+          verbose=1,
+          validation_data=(x_test, y_test))
+val_accs.append(history.history['val_acc'])
+print(len(val_accs))
+val_losses.append(history.history['val_loss'])
+accs.append(history.history['acc'])
+losses.append(history.history['loss'])
 
     #print('TEST SCORES')
     #print('acc: ',history.history['acc'])
@@ -158,7 +162,7 @@ for x in range(0,n):
     #print('Test accuracy:', val_accs)
 
     # Dynamic Plotting
-    plot_metrics()
+plot_metrics()
 
 try:
     model.save('classification')
