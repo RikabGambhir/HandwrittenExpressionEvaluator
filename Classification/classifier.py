@@ -4,6 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from keras.preprocessing import image
 from keras.models import load_model
+import math
+from math import sqrt
 
 
 CLASSES = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'plus', 'minus', 'multiplication', 'division1']
@@ -45,6 +47,16 @@ def predict_multiple_images(test_folder):
     image_matrix = np.concatenate((image_matrix,images), axis=0)            # Converts the list of arrays into a matrix (to be inputted into predict_on_batch)
     prediction_multiple = model.predict_on_batch(image_matrix[:,:,:,None])  # Predicts the batch of images using the trained model (outputs a list of arrays)
 
+    # Used to find how many images to place in each figure
+    n = len(images)             # computes number of input images
+    sqrt_n = math.sqrt(n)       # takes the square root
+    print(n)
+    if sqrt_n * sqrt_n == n:
+        n = sqrt_n              # will ouput sqrt_n * sqrt_n images onto plot
+    else:
+        n = int(sqrt(n)+1)      # finds next biggest square
+    print(n)
+
     fig = plt.figure(figsize = [10,10])
     for i in range(len(prediction_multiple)):
         prediction = prediction_multiple[i].argmax()        # Finds the biggest value in the array and output the index of that value
@@ -52,8 +64,9 @@ def predict_multiple_images(test_folder):
         print("Predicted %s" % (prediction))
 
         # *** Plotting images with Prediction
-        fig.add_subplot(4,4,i+1)
-        plt.imshow(images[i].reshape(28,28), cmap='gray', interpolation='none')
+        fig.add_subplot(n,n,i+1)
+        plt.imshow(images[i], cmap='gray', interpolation='none')
+        plt.axis('off')
         plt.title("Predicted %s" % (prediction))
 
     plt.show()
