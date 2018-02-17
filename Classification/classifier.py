@@ -49,11 +49,10 @@ def predict_multiple_images(test_folder):
     for i in range(len(prediction_multiple)):
         prediction = prediction_multiple[i].argmax()        # Finds the biggest value in the array and output the index of that value
         prediction = CLASSES[int(prediction)]               # Outputs the corresponding class name of array
-        print(prediction)
         print("Predicted %s" % (prediction))
 
         # *** Plotting images with Prediction
-        fig.add_subplot(3,3,i+1)
+        fig.add_subplot(4,4,i+1)
         plt.imshow(images[i].reshape(28,28), cmap='gray', interpolation='none')
         plt.title("Predicted %s" % (prediction))
 
