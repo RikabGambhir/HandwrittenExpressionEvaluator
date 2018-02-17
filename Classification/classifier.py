@@ -37,13 +37,13 @@ def predict_multiple_images(test_folder):
     images = []
     image_matrix = np.zeros((0,28, 28))
 
+    # Loading images from test_folder
     for filename in os.listdir(test_folder):
         imgs = cv2.imread(os.path.join(test_folder,filename), 0)            # Reads the images in the folder and converts it to black and white
         if imgs is not None:
             images.append(imgs)                                             # Appends all the images in the folder (list of arrays)
     image_matrix = np.concatenate((image_matrix,images), axis=0)            # Converts the list of arrays into a matrix (to be inputted into predict_on_batch)
     prediction_multiple = model.predict_on_batch(image_matrix[:,:,:,None])  # Predicts the batch of images using the trained model (outputs a list of arrays)
-
 
     fig = plt.figure(figsize = [10,10])
     for i in range(len(prediction_multiple)):
