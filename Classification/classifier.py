@@ -12,14 +12,14 @@ CLASSES = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight
 model = load_model('classification')
 
 # *** Input images
-test_folder = 'test'            # used for predict_multiple_images
-folder_name = 'division1'       # input folder name of single image
-image_number = '_0'
+# test_folder = 'test'            # used for predict_multiple_images
+# folder_name = 'division1'       # input folder name of single image
+# image_number = '_0'
 
 # *** Use this function to input images ==> outputs prediction
 def predict_single_image(img):
 
-    img = cv2.imread(img, 0)                                # Reads the images in the folder and converts it to black and white
+    # img = cv2.imread(img, 0)                                # Reads the images in the folder and converts it to black and white
 
     prediction_single = model.predict(img[None,:,:,None])   # Predicts the image using the trained model (outputs an array)
     prediction_single = prediction_single.argmax()          # Finds the biggest value in the array and output the index of that value
@@ -29,7 +29,7 @@ def predict_single_image(img):
     fig = plt.figure(figsize = [10,10])
     fig.add_subplot(111)
     plt.imshow(img.reshape(28,28), cmap='gray', interpolation='none')
-    plt.title("Predicted %s, Class %s" % (prediction_single,folder_name))
+    plt.title("Predicted %s" % (prediction_single))
     plt.show()
 
     return prediction_single
@@ -64,7 +64,7 @@ def predict_multiple_images(test_folder):
         print("Predicted %s" % (prediction))
 
         # *** Plotting images with Prediction
-        fig.add_subplot(n,n,i+1)
+        fig.add_subplo172t(n,n,i+1)
         plt.imshow(images[i], cmap='gray', interpolation='none')
         plt.axis('off')
         plt.title("Predicted %s" % (prediction))
@@ -80,4 +80,4 @@ def predict_multiple_images(test_folder):
 # print("Predicted %s, Class %s" % (prediction,folder_name))
 
 
-predictions = predict_multiple_images(test_folder)
+# predictions = predict_multiple_images(test_folder)
