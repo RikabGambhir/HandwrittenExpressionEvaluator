@@ -41,21 +41,22 @@ class DetectionOutput:
 			return self.combineAllRec(bigBox)
 
 # test
-# def start():
-# 	a = BoundingBox(10,48,87,160,"5")
-# 	b = BoundingBox(96,71,175,111,"-")
-# 	c = BoundingBox(183,32,266,116,"2")
-# 	d = BoundingBox(282,58,365,164,"+")
-# 	e = BoundingBox(376,21,450,112,"3")
-# 	f = BoundingBox(468,48,516,152,"*")
-# 	g = BoundingBox(527,21,603,106,"4")
-# 	h = BoundingBox(613,46,680,137,"-")
-# 	i = BoundingBox(688,21,792,104,"10")
-# 	testBoxList = [a,b,c,d,e,f,g,h,i]
-# 	testDetection = DetectionOutput(testBoxList)
-# 	result = testDetection.combineAll()
-# 	#result = testDetection.getFirst((0,0))
-#
-# 	result.display()
+def start():
+	a = BoundingBox(90,66,191,201,"8")
+	b = BoundingBox(214,102,308,132,"-")
+	c = BoundingBox(322,65,423,196,"4")
+	d = BoundingBox(83,222,431,271,"/")
+	e = BoundingBox(97,312,190,402,"2")
+	f = BoundingBox(217,319,293,378,"+")
+	g = BoundingBox(318,305,391,447,"3")
+	testBoxList = [a,b,c,d,e,f,g]
+	testDetection = DetectionOutput(testBoxList)
+	result = testDetection.combineAll()
+	#result = testDetection.getFirst((0,0))
 
-#start()
+	result.display()
+
+start()
+
+
+

@@ -48,28 +48,28 @@ def predict_multiple_images(test_folder):
     prediction_multiple = model.predict_on_batch(image_matrix[:,:,:,None])  # Predicts the batch of images using the trained model (outputs a list of arrays)
 
     # Used to find how many images to place in each figure
-    n = len(images)             # computes number of input images
-    sqrt_n = math.sqrt(n)       # takes the square root
-    print(n)
-    if sqrt_n * sqrt_n == n:
-        n = sqrt_n              # will ouput sqrt_n * sqrt_n images onto plot
-    else:
-        n = int(sqrt(n)+1)      # finds next biggest square
-    print(n)
-
-    fig = plt.figure(figsize = [10,10])
-    for i in range(len(prediction_multiple)):
-        prediction = prediction_multiple[i].argmax()        # Finds the biggest value in the array and output the index of that value
-        prediction = CLASSES[int(prediction)]               # Outputs the corresponding class name of array
-        print("Predicted %s" % (prediction))
-
-        # *** Plotting images with Prediction
-        fig.add_subplo172t(n,n,i+1)
-        plt.imshow(images[i], cmap='gray', interpolation='none')
-        plt.axis('off')
-        plt.title("Predicted %s" % (prediction))
-
-    plt.show()
+    # n = len(images)             # computes number of input images
+    # sqrt_n = math.sqrt(n)       # takes the square root
+    # print(n)
+    # if sqrt_n * sqrt_n == n:
+    #     n = sqrt_n              # will ouput sqrt_n * sqrt_n images onto plot
+    # else:
+    #     n = int(sqrt(n)+1)      # finds next biggest square
+    # print(n)
+    #
+    # # fig = plt.figure(figsize = [10,10])
+    # # for i in range(len(prediction_multiple)):
+    # #     prediction = prediction_multiple[i].argmax()        # Finds the biggest value in the array and output the index of that value
+    # #     prediction = CLASSES[int(prediction)]               # Outputs the corresponding class name of array
+    # #     print("Predicted %s" % (prediction))
+    # #
+    # #     # *** Plotting images with Prediction
+    # #     fig.add_subplo172t(n,n,i+1)
+    # #     plt.imshow(images[i], cmap='gray', interpolation='none')
+    # #     plt.axis('off')
+    # #     plt.title("Predicted %s" % (prediction))
+    # #
+    # # plt.show()
 
     return prediction
 

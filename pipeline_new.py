@@ -1,10 +1,11 @@
 import cv2
 import numpy as np
 from Image_Preprocessing import Preprocess
-from classification_folder import classifier
+# from Classification import classifier
 import os
+import matplotlib.pyplot as plt
 
-DIRECTORY = 'Data/all_images'
+DIRECTORY = 'Data/test'
 
 def load_images_from_folder(folder):
     images = {}
@@ -26,9 +27,24 @@ print('{:<30}- {:<15}'.format('File', 'Prediction'))
 # Classify each image in directory and display file name and prediction
 for file_name in images.keys():
     #proc = images[file_name]
-    proc = Preprocess.process(images[file_name])
-    pred = classifier.predict_single_image(proc)
-    print('{:<30}{:<15}'.format(file_name, pred))
-    path = file_name
+    proc1 = Preprocess.process(images[file_name])
+    proc = Preprocess.crop(proc1, 8, 128)
+
+    fig = plt.figure(figsize = [10,10])
+    fig.add_subplot(131)
+    plt.imshow(images[file_name], cmap='gray', interpolation='none')
+    plt.title("Before Preprocessing" )
+    fig.add_subplot(132)
+    plt.imshow(proc1,cmap='gray', interpolation = 'none')
+    fig.add_subplot(133)
+    plt.imshow(proc, cmap='gray', interpolation='none')
+    plt.show()
+
+
+
+
+    # pred = classifier.predict_single_image(proc)
+    # print('{:<30}{:<15}'.format(file_name, pred))
+    # path = file_name
     # os.remove(os.path.abspath(path))
-    labels.append(pred)
+    # labels.append(pred)

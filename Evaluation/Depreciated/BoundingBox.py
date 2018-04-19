@@ -50,25 +50,11 @@ class BoundingBox():
 
 # test
 def start():
-	a = BoundingBox(10,28,87,140,"5")
-	b = BoundingBox(96,91,175,131,"-")
-	c = BoundingBox(183,12,266,136,"2")
-	d = BoundingBox(282,78,365,144,"+")
-	e = BoundingBox(376,1,450,132,"3")
-	f = BoundingBox(468,68,516,132,"*")
-	g = BoundingBox(527,1,603,126,"4")
-	h = BoundingBox(613,66,680,117,"-")
-	i = BoundingBox(688,1,792,114,"10")
+	a = BoundingBox(2,2,4,6,"5")
+	b = BoundingBox(5,3,6,8,"-")
+	c = BoundingBox(12,1,18,8,"8")
 	a = a.combine(b)
 	a = a.combine(c)
-	a = a.combine(d)
-	a = a.combine(e)
-	a = a.combine(f)
-	a = a.combine(g)
-	a = a.combine(h)
-	a = a.combine(i)
 	a.display()
-	#print("The value of the expression is: ")
-	#print(eval(a.val))
 
 #start()
