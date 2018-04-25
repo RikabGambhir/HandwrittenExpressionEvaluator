@@ -9,6 +9,25 @@ from math import sqrt
 
 
 CLASSES = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'plus', 'minus', 'multiplication', 'division1']
+SYMBOLS = {
+    'zero' : '0',
+    'one' : '1',
+    'two' : '2',
+    'three' : '3',
+    'four' : '4',
+    'five' : '5',
+    'six' : '6',
+    'seven' : '7',
+    'eight' : '8',
+    'nine' : '9',
+    'plus' : '+',
+    'minus' : '-',
+    'multiplication' : '*',
+    'division1' : '/',
+
+
+}
+
 model = load_model('classification')
 
 # *** Input images
@@ -26,11 +45,11 @@ def predict_single_image(img):
     prediction_single = CLASSES[prediction_single]          # Outputs the class name using the index
 
     # *** Plotting image with prediction
-    fig = plt.figure(figsize = [10,10])
-    fig.add_subplot(111)
-    plt.imshow(img.reshape(28,28), cmap='gray', interpolation='none')
-    plt.title("Predicted %s" % (prediction_single))
-    plt.show()
+    # fig = plt.figure(figsize = [10,10])
+    # fig.add_subplot(111)
+    # plt.imshow(img.reshape(28,28), cmap='gray', interpolation='none')
+    # plt.title("Predicted %s" % (prediction_single))
+    # plt.show()
 
     return prediction_single
 
@@ -72,6 +91,9 @@ def predict_multiple_images(test_folder):
     # # plt.show()
 
     return prediction
+
+def get_symbol(st):
+    return SYMBOLS[st]
 
 # *** Use this to input single images
 # script_dir = sys.path[0]

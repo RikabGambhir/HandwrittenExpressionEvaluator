@@ -23,7 +23,7 @@ class BoundingBox():
 		self.val = x
 	# print value
 	def display(self):
-		print(self.val)
+		return self.val
 	# get **weighted** midpoint
 	def getMid(self):
 		return (0.5*(0.33*self.topL[0]+0.66*self.botR[0]),

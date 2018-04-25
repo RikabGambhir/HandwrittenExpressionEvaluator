@@ -1,4 +1,3 @@
-from BoundingBox import BoundingBox
 import math
 
 class DetectionOutput:
