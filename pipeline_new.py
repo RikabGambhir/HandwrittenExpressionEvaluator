@@ -1,11 +1,13 @@
 import cv2
 import numpy as np
 from Image_Preprocessing import Preprocess
-# from Classification import classifier
+from Classification import classifier
 import os
 import matplotlib.pyplot as plt
+from HarrCascade import haar_cascade
 
 DIRECTORY = 'Data/test'
+CASCADE = 'HarrCascade/data/cascade.xml'
 
 def load_images_from_folder(folder):
     images = {}
@@ -26,19 +28,32 @@ print('{:<30}- {:<15}'.format('File', 'Prediction'))
 
 # Classify each image in directory and display file name and prediction
 for file_name in images.keys():
-    #proc = images[file_name]
-    proc1 = Preprocess.process(images[file_name])
-    proc = Preprocess.crop(proc1, 8, 128)
 
-    fig = plt.figure(figsize = [10,10])
-    fig.add_subplot(131)
-    plt.imshow(images[file_name], cmap='gray', interpolation='none')
-    plt.title("Before Preprocessing" )
-    fig.add_subplot(132)
-    plt.imshow(proc1,cmap='gray', interpolation = 'none')
-    fig.add_subplot(133)
-    plt.imshow(proc, cmap='gray', interpolation='none')
-    plt.show()
+    #proc = images[file_name]
+    proc = Preprocess.process(images[file_name])
+    proc = Preprocess.image_resize(proc, width = 250)
+    # proc = Preprocess.crop(proc1, 8, 128)
+    #
+    # fig = plt.figure(figsize = [10,10])
+    # fig.add_subplot(131)
+    # plt.imshow(images[file_name], cmap='gray', interpolation='none')
+    # plt.title("Before Preprocessing" )
+    # fig.add_subplot(132)
+    # plt.imshow(proc1,cmap='gray', interpolation = 'none')
+    # fig.add_subplot(133)
+    # plt.imshow(proc, cmap='gray', interpolation='none')
+    # plt.show()
+    #
+    #
+
+    symbols = haar_cascade.haar_cascade(proc, CASCADE)
+    for (x,y,w,h) in symbols:
+        cv2.rectangle(proc,(x,y),(x+w,y+h),(255,255,0),2)
+
+
+    cv2.imwrite("test_fives_haar.jpg", proc)
+    print('Done')
+
 
 
 
